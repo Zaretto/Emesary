@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emesary", "Emesary\Emesary.csproj", "{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{FE310A88-571E-4FE5-BA34-F4D8C40CC21B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{49D22469-99B9-4E21-9623-68CB3EF6F733}"
+	ProjectSection(SolutionItems) = preProject
+		Emesary.vsmdi = Emesary.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Emesary.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE310A88-571E-4FE5-BA34-F4D8C40CC21B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE310A88-571E-4FE5-BA34-F4D8C40CC21B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE310A88-571E-4FE5-BA34-F4D8C40CC21B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE310A88-571E-4FE5-BA34-F4D8C40CC21B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
