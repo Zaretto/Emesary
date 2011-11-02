@@ -40,12 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalQueue.cs" />
     <Compile Include="GlobalTransmitter.cs" />
     <Compile Include="IReceiver.cs" />
     <Compile Include="INotification.cs" />
     <Compile Include="ITransmitter.cs" />
     <Compile Include="Notification.cs" />
+    <Compile Include="NotificationList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueuedTransmitter.cs" />
+    <Compile Include="QueueNotification.cs" />
+    <Compile Include="QueueRunner.cs" />
     <Compile Include="ReceiptStatus.cs" />
     <Compile Include="Transmitter.cs" />
   </ItemGroup>
