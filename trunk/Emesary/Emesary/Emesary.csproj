@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="GlobalQueue.cs" />
     <Compile Include="GlobalTransmitter.cs" />
+    <Compile Include="IAsyncNotification.cs" />
     <Compile Include="IReceiver.cs" />
     <Compile Include="INotification.cs" />
     <Compile Include="ITransmitter.cs" />
