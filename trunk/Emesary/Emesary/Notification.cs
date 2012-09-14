@@ -27,10 +27,15 @@ using System.Text;
 
 namespace Emesary
 {
+    [Serializable]
     public class Notification : INotification
     {
         public object Value { get; set; }
 
+        internal Notification()
+        {
+        }
+        
         public Notification(object value)
         {
             this.Value = value;

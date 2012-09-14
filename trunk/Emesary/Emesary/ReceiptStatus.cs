@@ -35,6 +35,7 @@ namespace Emesary
         Abort = 2, 			// stop processing this event and fail
         Finished = 3, 		// stop processing this event and return success
         NotProcessed = 4, 	// recipient didn't recognise this event
-        Pending = 5     	// Not yet processed
+        Pending = 5,     	// Not yet processed
+        Indeterminate =6,   // Dispatched asynchronously - so cannot know receipt status.
     }
 }
