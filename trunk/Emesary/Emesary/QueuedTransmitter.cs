@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Emesary
@@ -80,8 +79,11 @@ namespace Emesary
             List<INotification> toRemove = new List<INotification>();
 
             // Iterate through all notifications that are ready to be processed.
-            foreach (var notification in pendingList.items.Where(n => DateTime.UtcNow >= n.whenNextReadyToSend))
+//            foreach (var notification in pendingList.items.Where(n => DateTime.UtcNow >= n.whenNextReadyToSend))
+            foreach (var notification in pendingList.items)
             {
+                if (DateTime.UtcNow < notification.whenNextReadyToSend)
+                    continue;
                 bool process_failed = false;
                 bool processed_ok = false;
 
