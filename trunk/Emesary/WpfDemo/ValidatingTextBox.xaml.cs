@@ -82,7 +82,7 @@ namespace WpfDemo
             set
             {
                 SetValue(ErrorProperty, value);
-                PropertyChanged(this, new PropertyChangedEventArgs("Error "));
+                PropertyChanged(this, new PropertyChangedEventArgs("Error"));
             }
         }
 
@@ -130,13 +130,15 @@ namespace WpfDemo
         private void reval()
         {
             duplicatedName.Visibility = System.Windows.Visibility.Hidden;
+            ValidationMessage.Visibility = System.Windows.Visibility.Hidden;
 
             Notification inquiry = new InquiryNotification(InquiryNotification.InquiryType.CanUse, Text, this);
             
             if (GlobalTransmitter.NotifyAll(inquiry) == ReceiptStatus.Fail)
             {
-                Error = "Duplicated Entry";
+                ValidationMessage.Text = "Duplicated Entry";
                 duplicatedName.Visibility = System.Windows.Visibility.Visible;
+                ValidationMessage.Visibility = System.Windows.Visibility.Visible;
             }
         }
     }
