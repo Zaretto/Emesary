@@ -19,5 +19,6 @@
                    Visibility="Hidden" VerticalAlignment="Center" 
                    Margin="0,6,0,0"
                    Width="33" Height="26" Source="/WpfDemo;component/Images/blue_warning.png" />
+        <TextBlock Name="ValidationMessage"/>
     </DockPanel>
 </UserControl>

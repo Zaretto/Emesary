@@ -38,10 +38,10 @@ namespace WpfDemo
         private void CreateSampleData()
         {
             var p = new List<Person>();
-            p.Add(new Person { Name = "t", DateOfBirth = "22-OCT-1968", HealthcareNumber = "NH2205191901" });
-            p.Add(new Person { Name = "A. Gibson", DateOfBirth = "05-DEC-1965", HealthcareNumber = "NH1250120303" });
-            p.Add(new Person { Name = "A. Walker", DateOfBirth = "05-DEC-1965", HealthcareNumber = "NH1560120303" });
-            p.Add(new Person { Name = "A. Hedgehog", DateOfBirth = "24-OCT-1970", HealthcareNumber = "NH2308120304" });
+            p.Add(new Person { Name = "test", DateOfBirth = "22-OCT-1968", HealthcareNumber = "NH2205191901" });
+            p.Add(new Person { Name = "Gibson", DateOfBirth = "05-DEC-1965", HealthcareNumber = "NH1250120303" });
+            p.Add(new Person { Name = "Walker", DateOfBirth = "05-DEC-1965", HealthcareNumber = "NH1560120303" });
+            p.Add(new Person { Name = "Hedgehog", DateOfBirth = "24-OCT-1970", HealthcareNumber = "NH2308120304" });
             People = p;
         }
 
