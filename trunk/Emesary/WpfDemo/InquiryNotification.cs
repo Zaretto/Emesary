@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WpfDemo
 {
-    class InquiryNotification : Emesary.Notification
+    class InquiryNotification : Emesary.QueueNotification 
     {
         /// <summary>
         /// The type of the notification. This is to allow for a generic method of inquiring - so probably there

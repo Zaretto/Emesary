@@ -125,7 +125,10 @@ namespace Emesary
                             return_status = ReceiptStatus.Pending;
                             break;
                         case ReceiptStatus.NotProcessed:
+                            break;
                         case ReceiptStatus.OK:
+                            if (return_status == ReceiptStatus.NotProcessed)
+                                return_status = rstat;
                             break;
 
                         case ReceiptStatus.Abort:

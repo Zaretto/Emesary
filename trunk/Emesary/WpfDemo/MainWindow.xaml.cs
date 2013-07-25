@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Emesary;
+using System.ComponentModel;
 
 namespace WpfDemo
 {
@@ -30,7 +31,37 @@ namespace WpfDemo
 
             // important to register ourselves with the global transmitter to ensure that we receive global notifications, otherwise
             // the Receive method will never be called.
-            GlobalTransmitter.Register(this);
+//            GlobalTransmitter.Register(this);
+            // count number of files within source directory (and within subdirectories)
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.WorkerReportsProgress = true;
+
+            Emesary.GlobalQueue.queue.Register(this);
+
+            bw.DoWork += new DoWorkEventHandler(
+                delegate(object o, DoWorkEventArgs args)
+                {
+                    while (true)
+                    {
+                        Emesary.GlobalQueue.queue.ProcessPending();
+                        System.Threading.Thread.Sleep(10);
+                    }
+                }
+            );
+
+            //bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+            //    delegate(object o, RunWorkerCompletedEventArgs args)
+            //    {
+
+            //        // success, clear to launch!
+            //        form_throttler_copy throttler_copy = new form_throttler_copy();
+            //        throttler_copy.Show();
+            //        this.Dispose();
+            //    }
+            //);
+
+            bw.RunWorkerAsync();
+
         }
         /// <summary>
         /// create some sample data.
