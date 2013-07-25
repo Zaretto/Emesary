@@ -4,37 +4,29 @@ using System.Text;
 
 namespace Emesary
 {
+
     public class NotificationList
     {
         public NotificationList(string queueId)
         {
             QueueID = queueId;
-            items = new List<QueueNotification>();
+            items = new List<INotification>();
         }
         public string Id { get; private set; }
 
         public string QueueID { get; set; }
 
-        public List<QueueNotification> items { get; private set; }
+        public List<INotification> items { get; private set; }
 
         internal void Add(INotification M)
         {
-            if (M is QueueNotification)
-            {
-                items.Add(M as QueueNotification);
-            }
-            else
-                throw new NotImplementedException();
+            items.Add(M);
         }
 
         internal void Remove(INotification M)
         {
-            if (M is QueueNotification)
-            {
-                items.Remove(M as QueueNotification);
-            }
-            else
-                throw new NotImplementedException();
+            items.Remove(M);
         }
     }
+
 }

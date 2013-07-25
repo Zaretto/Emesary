@@ -10,10 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Emesary</RootNamespace>
     <AssemblyName>Emesary</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +44,7 @@
     <Compile Include="GlobalQueue.cs" />
     <Compile Include="GlobalTransmitter.cs" />
     <Compile Include="IAsyncNotification.cs" />
+    <Compile Include="IQueueNotification.cs" />
     <Compile Include="IReceiver.cs" />
     <Compile Include="INotification.cs" />
     <Compile Include="ITransmitter.cs" />

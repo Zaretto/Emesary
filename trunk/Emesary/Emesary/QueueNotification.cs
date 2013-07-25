@@ -23,7 +23,7 @@ using System.Text;
 
 namespace Emesary
 {
-    public class QueueNotification : INotification
+    public class QueueNotification : IQueueNotification, INotification
     {
         private static double DefaultTimeout = 320;// seconds
 
@@ -31,28 +31,28 @@ namespace Emesary
         {
             this.Value = Value;
             TimedOut = false;
-            complete = false;
-            createdDate = DateTime.UtcNow;
-            expiryDate = createdDate.AddSeconds(QueueNotification.DefaultTimeout);
-            whenNextReadyToSend = createdDate;
+            Complete = false;
+            CreatedDate = DateTime.UtcNow;
+            ExpiryDate = CreatedDate.AddSeconds(QueueNotification.DefaultTimeout);
+            WhenNextReadyToSend = CreatedDate;
         }
 
         /// <summary>
         /// queued elements cannot be linked to objects as this is not supported with the
         /// DataObjects.NET 
         /// </summary>
-        public object Value {get; set;}
+        public object Value { get; set; }
 
         /// <summary>
         /// Message epoch. UTC.
         /// All datetimes must be stored as UTC
         /// </summary>
-        public DateTime createdDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// The datetime in UTC when this message expires.
         /// </summary>
-        public DateTime expiryDate { get; set; }
+        public DateTime ExpiryDate { get; set; }
 
         /// <summary>
         /// The datetime in UTC when this message will be ready to be sent.
@@ -62,22 +62,15 @@ namespace Emesary
         /// Default value is the creation date. Do not set this unless you are certain of the date.
         /// Can be used to schedule regular events.
         /// </summary>
-        public DateTime whenNextReadyToSend { get; set; }
-
-        public bool complete { get; set; }
+        public DateTime WhenNextReadyToSend { get; set; }
 
         /// <summary>
         /// Used to control the sending of notifications. If this returns false then the Transmitter 
         /// should not send this notification.
         /// </summary>
         /// <returns></returns>
-        public bool IsReadyToSend { get { return !TimedOut; } }
-
-        /// <summary>
-        /// Used to control the timeout. If this notification has timed out - then the processor is entitled 
-        /// to true.
-        /// </summary>
-        /// <returns></returns>
+        public bool IsReadyToSend { get { return !IsTimedOut && !Complete && DateTime.Now >= WhenNextReadyToSend; } }
+        public bool Complete { get; set; }
         public bool TimedOut { get; set; }
 
         /// <summary>
@@ -93,9 +86,21 @@ namespace Emesary
         {
             get
             {
-                return complete || TimedOut;
+                return Complete;
             }
         }
-    }
 
+        /// <summary>
+        /// Used to control the timeout. If this notification has timed out - then the processor is entitled 
+        /// to true.
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool IsTimedOut
+        {
+            get { return false; }
+        }
+
+        public Func<IQueueNotification, ReceiptStatus, ReceiptStatus> Completed { get; set; }
+
+    }
 }
