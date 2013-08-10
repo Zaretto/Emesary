@@ -21,6 +21,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Emesary
 {
@@ -32,17 +33,16 @@ namespace Emesary
     {
         public const int DefaultRetrySeconds = 60;
 
-        NotificationList pendingList;
         const string QueuedTransmitterQueueID = "QueuedTransmitter-NotificationList";
-
-        public string queueID { get; set; }
-
+        private AutoResetEvent messageWaitEvent = new AutoResetEvent(false);
+        NotificationList pendingList;
         public QueuedTransmitter(string queueID)
         {
             this.queueID = queueID + QueuedTransmitterQueueID;
             pendingList = new NotificationList(queueID);
         }
 
+        public string queueID { get; set; }
         public void createObjects()
         {
             if (pendingList != null)
@@ -77,6 +77,7 @@ namespace Emesary
             if (notify_result == ReceiptStatus.Pending)
             {
                 pendingList.Add(M);
+                messageWaitEvent.Set();
                 notify_result = ReceiptStatus.OK; // Pending is effectively OK.
             }
             return notify_result;
@@ -156,6 +157,11 @@ namespace Emesary
             // stub - maybe this could act as a bridge by some method - probably providing a transmitter to pass on to - such as the global transmitter
             // during construction.
             return Emesary.ReceiptStatus.NotProcessed;
+        }
+
+        public void WaitForMessage()
+        {
+            messageWaitEvent.WaitOne();
         }
     }
 }

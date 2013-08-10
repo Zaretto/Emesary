@@ -37,7 +37,7 @@ namespace Emesary
         private List<IReceiver> V = new List<IReceiver>();
         private List<IReceiver> pendingRemovals = new List<IReceiver>();
         private List<IReceiver> pendingAdditions = new List<IReceiver>();
-
+        private object Interlock = new object();
         /**
             * Registers an object to receive messsages from this transmitter. 
             * This object is added to the top of the list of objects to be notified. This is deliberate as 
@@ -84,13 +84,19 @@ namespace Emesary
         {
             if (inProgressCount <= 0 && pendingRemovals.Count > 0)
             {
-                lock (this)
+                lock (Interlock)
                 {
                     foreach (var r in pendingRemovals)
                     {
                         V.Remove(r);
                     }
                     pendingRemovals.Clear();
+                }
+            }
+            if (inProgressCount <= 0 && pendingAdditions.Count > 0)
+            {
+                lock (Interlock)
+                {
                     foreach (var r in pendingAdditions)
                     {
                         if (V.IndexOf(r) < 0)
