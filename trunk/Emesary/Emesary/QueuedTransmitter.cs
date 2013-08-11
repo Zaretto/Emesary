@@ -63,6 +63,7 @@ namespace Emesary
         {
             M.Completed = completed;
             pendingList.Add(M as INotification);
+            messageWaitEvent.Set();
             return ReceiptStatus.OK;
         }
 
@@ -73,14 +74,9 @@ namespace Emesary
         /// <returns></returns>
         new public ReceiptStatus NotifyAll(INotification M)
         {
-            ReceiptStatus notify_result = ReceiptStatus.Pending;
-            if (notify_result == ReceiptStatus.Pending)
-            {
-                pendingList.Add(M);
-                messageWaitEvent.Set();
-                notify_result = ReceiptStatus.OK; // Pending is effectively OK.
-            }
-            return notify_result;
+            pendingList.Add(M);
+            messageWaitEvent.Set();
+            return ReceiptStatus.Pending; // Pending is effectively OK.;
         }
 
         public void ProcessPending()
