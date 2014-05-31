@@ -72,7 +72,7 @@ namespace Emesary
         /// </summary>
         /// <param name="M"></param>
         /// <returns></returns>
-        new public ReceiptStatus NotifyAll(INotification M)
+        public override ReceiptStatus NotifyAll(INotification M)
         {
             pendingList.Add(M);
             messageWaitEvent.Set();
@@ -103,7 +103,7 @@ namespace Emesary
                     // to priver fine grained control over retries.
                     if (qnotification.IsReadyToSend)
                     {
-                        Console.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - " + notification.ToString());
+                        System.Diagnostics.Debug.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - " + notification.ToString());
 
                         ReceiptStatus notify_result = base.NotifyAll(notification);
 
@@ -136,11 +136,12 @@ namespace Emesary
                     }
                     else
                     {
-                        Console.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - not ready: " + notification.ToString());
+                        System.Diagnostics.Debug.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - not ready: " + notification.ToString());
                     }
                 }
                 else
                 {
+                    System.Diagnostics.Debug.WriteLine("QueuedTransmitter; Notify non queued message {0}", notification.ToString());
                     ReceiptStatus notify_result = base.NotifyAll(notification);
 
                     pendingList.Remove(notification);

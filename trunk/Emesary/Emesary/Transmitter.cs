@@ -45,7 +45,7 @@ namespace Emesary
             * when ReceiptStatus of Abort or Finished are encountered. So it was a deliberate decision that the
             * most recently registered recipients should process the messages/events first.
             */
-        public void Register(IReceiver R)
+        public virtual void Register(IReceiver R)
         {
             if (V.IndexOf(R) < 0)
             {
@@ -60,7 +60,7 @@ namespace Emesary
         /*
             *  Removes an object from receving message from this transmitter
             */
-        public void DeRegister(IReceiver R)
+        public virtual void DeRegister(IReceiver R)
         {
             if (inProgressCount <= 0)
                 V.Remove(R);
@@ -80,7 +80,7 @@ namespace Emesary
             *       however this has not yet been implemented - but the concept is still there and
             *       could be implemented by extending the IReceiver interface to allow for this.
             */
-        public ReceiptStatus NotifyAll(INotification M)
+        public virtual ReceiptStatus NotifyAll(INotification M)
         {
             if (inProgressCount <= 0 && pendingRemovals.Count > 0)
             {
