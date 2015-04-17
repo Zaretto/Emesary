@@ -148,8 +148,9 @@ namespace Emesary
 
                 }
             }
-            catch (System.InvalidOperationException)
+            catch
             {
+                System.Threading.Interlocked.Decrement(ref inProgressCount);
                 throw;
                 // return_status = ReceiptStatus.Abort;
             }
