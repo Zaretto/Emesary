@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emesary", "Emesary\Emesary.csproj", "{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{FE310A88-571E-4FE5-BA34-F4D8C40CC21B}"
@@ -14,14 +16,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfDemo", "WpfDemo\WpfDemo.csproj", "{BB8ECECD-832D-4F4F-AD86-94B2AD4D62F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleQueueOperation", "SampleQueueOperation\SampleQueueOperation.csproj", "{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}"
+EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = Emesary.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -61,8 +58,25 @@ Global
 		{BB8ECECD-832D-4F4F-AD86-94B2AD4D62F5}.Release|Mixed Platforms.Build.0 = Release|x86
 		{BB8ECECD-832D-4F4F-AD86-94B2AD4D62F5}.Release|x86.ActiveCfg = Release|x86
 		{BB8ECECD-832D-4F4F-AD86-94B2AD4D62F5}.Release|x86.Build.0 = Release|x86
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EF4C8A2F-525A-4841-B4DB-B6EC30FC11DB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Emesary.vsmdi
 	EndGlobalSection
 EndGlobal
