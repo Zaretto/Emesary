@@ -1,18 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}</ProjectGuid>
+    <ProjectGuid>{2FD55D5B-9768-4CD5-973E-FF295DC9182E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Emesary</RootNamespace>
-    <AssemblyName>Emesary</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <RootNamespace>MSMQBridge</RootNamespace>
+    <AssemblyName>EmesaryMSMQBridge</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -32,8 +31,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Emesary">
+      <HintPath>..\packages\Emesary.2.0.7\lib\Emesary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,23 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IBridgableNotification.cs" />
-    <Compile Include="GlobalQueue.cs" />
-    <Compile Include="GlobalTransmitter.cs" />
-    <Compile Include="IAsyncNotification.cs" />
-    <Compile Include="IQueueNotification.cs" />
-    <Compile Include="IReceiver.cs" />
-    <Compile Include="INotification.cs" />
-    <Compile Include="ITransmitter.cs" />
-    <Compile Include="Notification.cs" />
-    <Compile Include="NotificationList.cs" />
+    <Compile Include="MSMQBridge.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueuedTransmitter.cs" />
-    <Compile Include="QueueNotification.cs" />
-    <Compile Include="QueueRunner.cs" />
-    <Compile Include="ReceiptStatus.cs" />
-    <Compile Include="RouteToQueueBridge.cs" />
-    <Compile Include="Transmitter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

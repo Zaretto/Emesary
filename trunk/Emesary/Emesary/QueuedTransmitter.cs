@@ -40,6 +40,8 @@ namespace Emesary
         {
             this.queueID = queueID + QueuedTransmitterQueueID;
             pendingList = new NotificationList(queueID);
+            PendingFrequencyMs = 33;
+            PendingSleepMs = 200;
         }
 
         public string queueID { get; set; }
@@ -155,9 +157,27 @@ namespace Emesary
             // during construction.
             return Emesary.ReceiptStatus.NotProcessed;
         }
-
+        DateTime nextExec = DateTime.MinValue;
+        /// <summary>
+        /// Frequency at which to sleep when waiting for message (WaitForMessage) and queue has pending items.
+        /// NOTE: The individual items should also use the IsReady to prevent too frequent notification of recipients
+        /// </summary>
+        public int PendingFrequencyMs { get; set; }
+        /// <summary>
+        /// Amount of time to sleep when waiting for messages when queue has pending items.
+        /// This 
+        /// </summary>
+        public int PendingSleepMs { get; set; }
         public void WaitForMessage()
         {
+            if (pendingList.items.Count > 0)
+            {
+                if (nextExec < DateTime.Now)
+                    System.Threading.Thread.Sleep(PendingSleepMs); // sleep for between queue execution
+                nextExec = DateTime.Now.AddMilliseconds(PendingFrequencyMs);
+                return; // no need to wait when already a message pending.
+            }
+            nextExec = DateTime.Now.AddMilliseconds(33);
             messageWaitEvent.WaitOne();
         }
     }

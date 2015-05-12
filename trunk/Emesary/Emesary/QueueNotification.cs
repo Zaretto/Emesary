@@ -23,6 +23,7 @@ using System.Text;
 
 namespace Emesary
 {
+    [Serializable]
     public class QueueNotification : IQueueNotification, INotification
     {
         private static double DefaultTimeout = 320;// seconds

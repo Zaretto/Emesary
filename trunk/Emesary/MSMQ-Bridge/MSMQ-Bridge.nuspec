@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Richard Harrison</authors>
+    <projectUrl>http://emesary.codeplex.com</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>MSMQ Bridge for Emesary</description>
+    <releaseNotes>New MSMQ Bridge.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
+    <tags>Emesary MSMQ</tags>
+  </metadata>
+</package>
