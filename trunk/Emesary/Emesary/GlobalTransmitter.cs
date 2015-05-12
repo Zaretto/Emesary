@@ -32,21 +32,22 @@ namespace Emesary
      */
     public class GlobalTransmitter
     {
-        private static Transmitter globalNotifier = new Transmitter();
+        private static Transmitter _globalNotifier = new Transmitter();
+        public static Transmitter Transmitter { get { return _globalNotifier; } }
 
         public static void Register(IReceiver R)
         {
-            globalNotifier.Register(R);
+            _globalNotifier.Register(R);
         }
 
         public static void DeRegister(IReceiver R)
         {
-            globalNotifier.DeRegister(R);
+            _globalNotifier.DeRegister(R);
         }
 
         public static ReceiptStatus NotifyAll(INotification M)
         {
-            return globalNotifier.NotifyAll(M);
+            return _globalNotifier.NotifyAll(M);
         }
     }
 }

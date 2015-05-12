@@ -23,10 +23,18 @@ namespace Emesary
             {
                 sessionOpened = true;
             }
-            qt.ProcessPending();
+            while (!StopQueueRequest)
+            {
+                qt.ProcessPending();
 
-            Thread.Sleep(200); // TODO: Review thread frame rate.
+                qt.WaitForMessage();
+            }
+
         }
 
+        /// <summary>
+        /// true to request the queue processing to stop at the next convenient moment
+        /// </summary>
+        public bool StopQueueRequest { get; set; }
     }
 }

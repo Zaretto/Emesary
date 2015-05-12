@@ -61,9 +61,7 @@ namespace Tests
         #endregion
 
         bool received = false;
-        /// <summary>
-        ///A test for ActionRequest
-        ///</summary>
+
         [TestMethod()]
         public void BackgroundQueueTest()
         {
@@ -75,21 +73,58 @@ namespace Tests
             Thread queueRunnerThread = new Thread(new ThreadStart(qr.queueRun));
             queueRunnerThread.IsBackground = true;
 
-
+            ReceiptDisabled = false;
             queueRunnerThread.Start();
             Thread.Sleep(1000);
 
             Assert.IsTrue(received, "Notification received from queue");
+            qr.StopQueueRequest = true;
+            System.Threading.Thread.Sleep(1000);
+            Assert.IsFalse(queueRunnerThread.IsAlive, "Queue Runner should still have stopped");
+        }
+
+        [TestMethod()]
+        public void BackgroundQueueDelayedProcessing()
+        {
+            Emesary.GlobalQueue.queue.Register(this);
+            Emesary.QueueRunner qr = new Emesary.QueueRunner(Emesary.GlobalQueue.queue);
+
+            Emesary.GlobalQueue.NotifyAll(new Emesary.QueueNotification(this));
+
+            Thread queueRunnerThread = new Thread(new ThreadStart(qr.queueRun));
+            queueRunnerThread.IsBackground = true;
+
+            ReceiptDisabled = true;
+            queueRunnerThread.Start();
+            Thread.Sleep(1000);
+            ReceiptDisabled = false;
+            Thread.Sleep(1000);
+
+            Assert.IsTrue(received, "Notification received from queue");
+            qr.StopQueueRequest = true;
+            System.Threading.Thread.Sleep(1000);
+            Assert.IsFalse(queueRunnerThread.IsAlive, "Queue Runner should still have stopped");
         }
 
         public Emesary.ReceiptStatus Receive(Emesary.INotification message)
         {
+            if (ReceiptDisabled)
+            {
+                System.Console.WriteLine("Received whilst disabled ", message.ToString());
+                return Emesary.ReceiptStatus.NotProcessed;
+            }
+
             if (message.Value == this)
             {
                 received = true;
+                invocationCount++;                
                 return Emesary.ReceiptStatus.OK;
             }
             return Emesary.ReceiptStatus.NotProcessed;
         }
+
+        public int invocationCount { get; set; }
+
+        public bool ReceiptDisabled { get; set; }
     }
 }

@@ -30,11 +30,45 @@ namespace Emesary
 {
     public enum ReceiptStatus
     {
-        OK = 0,   			// info
-        Fail = 1, 			// if any item fails then send message may return fail
+        /// <summary>
+        /// Processing completed successfully
+        /// </summary>
+        OK = 0,
+
+        /// <summary>
+        /// Individual item failure
+        /// </summary>
+        Fail = 1,
+
+        /// <summary>
+        /// Fatal error; stop processing any further recipieints of this message. Implicitly fail
+        /// </summary>
         Abort = 2, 			// stop processing this event and fail
+
+        /// <summary>
+        /// Definitive completion - do not send message to any further recipieints
+        /// </summary>
         Finished = 3, 		// stop processing this event and return success
+
+        /// <summary>
+        /// Return value when method doesn't process a message.
+        /// </summary>
         NotProcessed = 4, 	// recipient didn't recognise this event
+
+        /// <summary>
+        /// Message has been sent but the return status cannot be determined as it has not been processed by the recipient. 
+        /// </summary>
+        /// <notes>
+        /// For example a queue or outgoing bridge
+        /// </notes>
         Pending = 5,     	// Not yet processed
+
+        /// <summary>
+        /// Message has been definitively handled but the return value cannot be determined. The message will not be sent any further
+        /// </summary>
+        /// <notes>
+        /// For example a point to point forwardeing bridge
+        /// </notes>
+        PendingFinished = 6,// definitively not yet processed  (e.g. forwarded to queue)
     }
 }
