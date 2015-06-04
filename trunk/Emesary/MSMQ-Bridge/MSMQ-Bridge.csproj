@@ -31,8 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Emesary">
-      <HintPath>..\packages\Emesary.2.0.7\lib\Emesary.dll</HintPath>
+    <Reference Include="Emesary, Version=2.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Emesary.2.0.9\lib\Emesary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
