@@ -49,11 +49,12 @@ namespace TestsNet451
     [TestClass]
     public class TestMSMQBridge : Emesary.IReceiver
     {
-       private const string MSMQName = @".\Private$\emesarytest";
-//        private const string MSMQName = @"FormatName:Direct=TCP:192.168.1.94\private$\emesarytest";\
-        //private const string MSMQName = @"FormatName:DIRECT=TCP:192.168.1.94\PRIVATE$\emesarytest";
-     //   private const string MSMQName = @"FormatName:Direct=OS:win-40dkyfxrine\private$\emesarytest";
-        //private const string MSMQName = @"Direct=OS:win-40dkyfxrine\private$\emesarytest";
+#if REMOTE_TEST
+        private const string MSMQName = @"FormatName:Direct=OS:win-40dkyfxrine\private$\emesarytest";
+#else
+        private const string MSMQName = @".\Private$\emesarytest";
+#endif
+       //private const string MSMQName = @"FormatName:Direct=TCP:192.168.1.94\private$\emesarytest";\
         private int received = 0;
 
         [TestMethod()]

@@ -18,8 +18,15 @@ namespace Emesary
         /// </summary>
         /// <param name="transmitter"></param>
         /// <param name="MSMQueueName"></param>
-        public static Emesary.MSMQBridge<T1> Incoming(string MSMQueueName, ITransmitter incomingTransmitter)
+        public static Emesary.MSMQBridge<T1> Incoming(string MSMQueueName, ITransmitter incomingTransmitter, int? receiveTimeOutSeconds = null)
         {
+            TimeSpan receiveTimeOut;
+
+            if (receiveTimeOutSeconds.HasValue)
+                receiveTimeOut = new TimeSpan(0, 0, receiveTimeOutSeconds.Value);
+            else
+                receiveTimeOut = new TimeSpan(0, 0, 30);
+
             var bridge = new MSMQBridge<T1>
             {
                 queue = new MessageQueue(MSMQueueName),
@@ -30,125 +37,86 @@ namespace Emesary
             bridge.queue.MessageReadPropertyFilter.SetAll();
             bridge.queue.Formatter = new BinaryMessageFormatter();
 
-
             //bridge.ReceiveLoop();
             if (incomingTransmitter != null)
             {
-                System.Threading.Tasks.Task.Factory.StartNew(() =>
-                {
-                    MessageQueueTransaction currentTransaction = null;// new MessageQueueTransaction();
-                    //MessageQueueTransaction currentTransaction = null;
-                    TimeSpan receiveTimeOut = new TimeSpan(0, 0, 8);
-                    System.Threading.Thread.Sleep(1 * 1000);
-
-
-                    while (bridge.Active)
-                    {
-                        try
-                        {
-                            Message msmqMessage;
-                            if (currentTransaction != null)
-                                currentTransaction.Begin();
-
-                            if (currentTransaction != null)
-                                msmqMessage = bridge.queue.Receive(receiveTimeOut, currentTransaction);
-                            else
-                                msmqMessage = bridge.queue.Receive(receiveTimeOut);
-
-                            bridge.ProcessReceivedMessage(msmqMessage);
-                            //foreach (var msmgMessage in queue.GetAllMessages())
-                            //{
-                            //    ProcessReceivedMessage(msmgMessage);
-                            //}
-                            if (currentTransaction != null)
-                                currentTransaction.Commit();
-                        }
-                        catch (MessageQueueException mqex)
-                        {
-                            System.Console.WriteLine("{0}", mqex);
-                            switch (mqex.MessageQueueErrorCode)
-                            {
-                                case MessageQueueErrorCode.IllegalQueuePathName:
-                                    System.Console.WriteLine("FATAL: {0}", mqex.MessageQueueErrorCode);
-                                    bridge.Active = false;
-                                    break;
-
-                                case MessageQueueErrorCode.IOTimeout:
-                                    if (currentTransaction != null)
-                                        currentTransaction.Abort();
-                                    break;
-
-                                default:
-                                    if (currentTransaction != null)
-                                        currentTransaction.Abort();
-                                    System.Console.WriteLine("FATAL: {0}", mqex.MessageQueueErrorCode);
-                                    //bridge.Active = false;
-                                    break;
-                            }
-                        }
-                    }
-                });
+               ReceiveLoop(receiveTimeOut, bridge);
             }
             else
             {
                 System.Console.WriteLine("Required onwards transmitter to create receive MSMG bridge");
                 throw new Exception("Required onwards transmitter to create receive MSMG bridge");
             }
+#if DEBUG
             System.Console.WriteLine("MSMQ Bridge incoming exit");
+#endif
             return bridge;
         }
 
-       private void ReceiveLoop()
-       {
-           Active = true;
+        private static void ReceiveLoop(TimeSpan receiveTimeOut, MSMQBridge<T1> bridge)
+        {
+            System.Threading.Tasks.Task.Factory.StartNew(() =>
+            {
+                MessageQueueTransaction currentTransaction = null;// new MessageQueueTransaction();
+                //MessageQueueTransaction currentTransaction = null;
+                bridge.Active = true; 
+                
+                do
+                {
+                    try
+                    {
+                        Message msmqMessage;
+                        if (currentTransaction != null)
+                            currentTransaction.Begin();
 
-           if (OnwardsTransmitter != null)
-           {
-               System.Threading.Tasks.Task.Factory.StartNew(() =>
-               {
-                   var currentTransaction = new MessageQueueTransaction();
-                   //MessageQueueTransaction currentTransaction = null;
-                   TimeSpan receiveTimeOut = new TimeSpan(0, 0, 8);
-                   System.Threading.Thread.Sleep(1 * 1000);
+                        if (currentTransaction != null)
+                            msmqMessage = bridge.queue.Receive(receiveTimeOut, currentTransaction);
+                        else
+                            msmqMessage = bridge.queue.Receive(receiveTimeOut);
 
-                   while (Active)
-                   {
-                       try
-                       {
-                           if (currentTransaction != null)
-                               currentTransaction.Begin();
+                        bridge.ProcessReceivedMessage(msmqMessage);
+                        //foreach (var msmgMessage in queue.GetAllMessages())
+                        //{
+                        //    ProcessReceivedMessage(msmgMessage);
+                        //}
+                        if (currentTransaction != null)
+                            currentTransaction.Commit();
+                    }
+                    catch (MessageQueueException mqex)
+                    {
+#if DEBUG
+                            System.Console.WriteLine("{0}", mqex);
+#endif
+                        switch (mqex.MessageQueueErrorCode)
+                        {
+                            case MessageQueueErrorCode.IllegalQueuePathName:
+                                System.Console.WriteLine("MSMQ Unrecoverable error: {0}", mqex.MessageQueueErrorCode);
+                                bridge.Active = false;
+                                break;
 
-                           var msmgMessage = queue.Receive(receiveTimeOut, currentTransaction);
-                           ProcessReceivedMessage(msmgMessage);
-                           //foreach (var msmgMessage in queue.GetAllMessages())
-                           //{
-                           //    ProcessReceivedMessage(msmgMessage);
-                           //}
-                           if (currentTransaction != null)
-                               currentTransaction.Commit();
-                       }
-                       catch (MessageQueueException mqex)
-                       {
-                           switch (mqex.MessageQueueErrorCode)
-                           {
-                               case MessageQueueErrorCode.IOTimeout:
-                                   if (currentTransaction != null)
-                                       currentTransaction.Abort();
-                                   break;
+                            case MessageQueueErrorCode.IOTimeout:
+                                if (currentTransaction != null)
+                                    currentTransaction.Abort();
+                                break;
 
-                               default:
-                                   if (currentTransaction != null)
-                                       currentTransaction.Abort();
-                                   break;
-                           }
-                       }
-                       System.Console.WriteLine("Queue: message received");
-                   }
-               });
-           }
-           else
-               throw new Exception("Required onwards transmitter to create receive MSMG bridge");
-       }
+                            default:
+                                if (currentTransaction != null)
+                                    currentTransaction.Abort();
+                                System.Console.WriteLine("MSMQ Unrecoverable error: {0}", mqex.MessageQueueErrorCode);
+                                bridge.Active = false;
+                                break;
+                        }
+                    }
+                    catch(System.Runtime.Serialization.SerializationException ex)
+                    {
+                        System.Console.WriteLine("MSMQ Unrecognised message {0}", ex.Message);
+                        if (currentTransaction != null)
+                            currentTransaction.Commit();
+                    }
+                } while (bridge.Active);
+
+            });
+        }
 
         /// <summary>
         /// construct outgoing bridge
