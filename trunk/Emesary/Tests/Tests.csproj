@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Emesary\Emesary.csproj">
-      <Project>{EAD9A57B-C856-43A8-A6D3-9DB34FE2F978}</Project>
+      <Project>{ead9a57b-c856-43a8-a6d3-9db34fe2f978}</Project>
       <Name>Emesary</Name>
     </ProjectReference>
   </ItemGroup>

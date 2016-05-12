@@ -27,7 +27,7 @@ namespace WpfDemo
         public ValidatingTextBox()
         {
             InitializeComponent();
-            GlobalQueue.Register(this);
+            App.Notifier.Register(this);
         }
 
         /// <summary>
@@ -133,13 +133,23 @@ namespace WpfDemo
             ValidationMessage.Visibility = System.Windows.Visibility.Hidden;
 
             var inquiry = new InquiryNotification(InquiryNotification.InquiryType.CanUse, Text, this);
-            
-            if (GlobalQueue.NotifyAll(inquiry) == ReceiptStatus.Fail)
+
+            App.Notifier.NotifyAll(inquiry, (notification, status) =>
             {
-                ValidationMessage.Text = "Duplicated Entry";
-                duplicatedName.Visibility = System.Windows.Visibility.Visible;
-                ValidationMessage.Visibility = System.Windows.Visibility.Visible;
-            }
+                if (status == ReceiptStatus.Fail)
+                {
+                    ValidationMessage.Text = "Duplicated Entry";
+                    duplicatedName.Visibility = System.Windows.Visibility.Visible;
+                    ValidationMessage.Visibility = System.Windows.Visibility.Visible;
+                }
+                else if (status == ReceiptStatus.OK)
+                {
+                    ValidationMessage.Text = "";
+                    duplicatedName.Visibility = System.Windows.Visibility.Hidden;
+                    ValidationMessage.Visibility = System.Windows.Visibility.Hidden;
+                }
+                return ReceiptStatus.OK;
+            });
         }
     }
 }
