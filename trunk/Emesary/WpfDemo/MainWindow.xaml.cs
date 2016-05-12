@@ -21,6 +21,8 @@ namespace WpfDemo
     /// </summary>
     public partial class MainWindow : Window, IReceiver
     {
+        public delegate void WpfDemoProcessDelegate();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,33 +38,36 @@ namespace WpfDemo
             BackgroundWorker bw = new BackgroundWorker();
             bw.WorkerReportsProgress = true;
 
-            Emesary.GlobalQueue.queue.Register(this);
+
+            App.Notifier.Register(this);
+
+            WpfDemoProcessDelegate del = new WpfDemoProcessDelegate(ProcessPendingNotificationQueue);
 
             bw.DoWork += new DoWorkEventHandler(
                 delegate(object o, DoWorkEventArgs args)
                 {
-                    while (true)
+                    while (!ApplicationExited)
                     {
-                        Emesary.GlobalQueue.queue.ProcessPending();
-                        System.Threading.Thread.Sleep(10);
+                        this.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Background, del);
+
+                        //                        System.Threading.Thread.Sleep(50);
+                        App.Notifier.WaitForMessage();
                     }
                 }
             );
-
-            //bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
-            //    delegate(object o, RunWorkerCompletedEventArgs args)
-            //    {
-
-            //        // success, clear to launch!
-            //        form_throttler_copy throttler_copy = new form_throttler_copy();
-            //        throttler_copy.Show();
-            //        this.Dispose();
-            //    }
-            //);
+            NotificationQueueEnabled = true;
 
             bw.RunWorkerAsync();
 
         }
+        private void ProcessPendingNotificationQueue()
+        {
+            if (NotificationQueueEnabled)
+                App.Notifier.ProcessPending();
+
+            //get back to main UI thread
+        }
+
         /// <summary>
         /// create some sample data.
         /// </summary>
@@ -97,7 +102,7 @@ namespace WpfDemo
             if (message is InquiryNotification)
             {
                 var inqMessage = message as InquiryNotification;
-
+                inqMessage.Complete = true;
                 if (People.Any(ip => ip.Name == inqMessage.InquiryValue))
                     return ReceiptStatus.Fail;
 
@@ -105,5 +110,9 @@ namespace WpfDemo
             }
             return ReceiptStatus.NotProcessed;
         }
+
+        public bool NotificationQueueEnabled { get; set; }
+
+        public bool ApplicationExited { get; set; }
     }
 }

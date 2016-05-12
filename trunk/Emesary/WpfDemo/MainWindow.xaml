@@ -14,15 +14,19 @@
             <RowDefinition Height="135*" />
         </Grid.RowDefinitions>
         <ListView Name="listViewNames" ItemsSource="{Binding People}" Grid.ColumnSpan="2" VerticalContentAlignment="Top" VerticalAlignment="Stretch">
-<ListView.View>
+            <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="auto" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Date of birth" Width="auto" DisplayMemberBinding="{Binding DateOfBirth}"/>
                 </GridView>
-            </ListView.View>        </ListView>
+            </ListView.View>
+        </ListView>
         <my:ValidatingTextBox Grid.Row="1" HorizontalAlignment="Left" x:Name="validatingTextBox1" VerticalAlignment="Top" Prompt="Test Name 1" Grid.ColumnSpan="2" Width="539" />
         <my:ValidatingTextBox Grid.Row="2" HorizontalAlignment="Left" x:Name="validatingTextBox2" VerticalAlignment="Top" Prompt="Test Name 2" Grid.ColumnSpan="2" Width="539" />
-        <FlowDocumentScrollViewer Foreground="#FF1610CD" Background="#FFFCFFD8" BorderThickness="0" FontSize="10" Margin="0,14,12,0" Grid.Row="3" Grid.ColumnSpan="2">
+        <DockPanel Grid.Row="3" Grid.ColumnSpan="2">
+            <my:NotificationLogControl DockPanel.Dock="Right" />
+
+            <FlowDocumentScrollViewer DockPanel.Dock="Left" Foreground="#FF1610CD" Background="#FFFCFFD8" BorderThickness="0" FontSize="10" >
             <FlowDocument FontSize="14">
                 <Paragraph Foreground="#FF606060" TextAlignment="Left" NumberSubstitution.CultureSource="User">
                     <Run Foreground="#FFA31515" Text="If you enter a value that is present in either the list of names, or the other textbox into either of the textboxes above then a warning will be shown in the form of a triangle next to the textbox"/>
@@ -35,5 +39,6 @@
                 </Paragraph>
             </FlowDocument>
         </FlowDocumentScrollViewer>
+        </DockPanel>
     </Grid>
 </Window>

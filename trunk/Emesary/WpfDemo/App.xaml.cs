@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Emesary;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -11,6 +12,13 @@ namespace WpfDemo
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
-    {
+    {        /// <summary>
+        /// the usual method of communicating within the application; this is processed in a background thread in the UI
+        /// </summary>
+        public static QueuedTransmitter Notifier;
+        public App()
+        {
+            Notifier = new QueuedTransmitter("EmesaryWpfDemo");
+        } 
     }
 }
