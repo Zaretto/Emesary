@@ -35,7 +35,7 @@ namespace Emesary
         internal Notification()
         {
         }
-        
+
         public Notification(object value)
         {
             this.Value = value;

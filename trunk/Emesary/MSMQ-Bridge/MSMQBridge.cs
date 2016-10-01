@@ -195,8 +195,11 @@ namespace Emesary
         public ReceiptStatus Receive(INotification message)
         {
             if (message is T1)
+            {
                 Notify(message);
-            return ReceiptStatus.Pending;
+                return ReceiptStatus.Pending;
+            }
+            return ReceiptStatus.NotProcessed;
         }
 
         public void Shutdown()

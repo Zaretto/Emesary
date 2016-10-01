@@ -8,8 +8,8 @@
     <projectUrl>http://emesary.codeplex.com</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>MSMQ Bridge for Emesary</description>
-    <releaseNotes>New MSMQ Bridge.</releaseNotes>
-    <copyright>Copyright 2015</copyright>
-    <tags>Emesary MSMQ</tags>
+    <releaseNotes>2.1 Added NotifyAllWithAsynchronousResult</releaseNotes>
+    <copyright>Copyright 2016 Richard Harrison</copyright>
+    <tags>Emesary MSMQ Bridge</tags>
   </metadata>
 </package>

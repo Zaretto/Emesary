@@ -48,6 +48,7 @@
     <Compile Include="IQueueNotification.cs" />
     <Compile Include="IReceiver.cs" />
     <Compile Include="INotification.cs" />
+    <Compile Include="ITrackedNotification.cs" />
     <Compile Include="ITransmitter.cs" />
     <Compile Include="Notification.cs" />
     <Compile Include="NotificationList.cs" />
