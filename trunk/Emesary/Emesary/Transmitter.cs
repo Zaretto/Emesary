@@ -22,7 +22,9 @@
  *
  *---------------------------------------------------------------------------*/
 
+using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Emesary
 {
@@ -34,9 +36,10 @@ namespace Emesary
      */
     public class Transmitter : ITransmitter
     {
-        private List<IReceiver> V = new List<IReceiver>();
-        private List<IReceiver> pendingRemovals = new List<IReceiver>();
-        private List<IReceiver> pendingAdditions = new List<IReceiver>();
+        private IList<IReceiver> V = new ConcurrentList<IReceiver>();
+        private IList<IReceiver> pendingRemovals = new ConcurrentList<IReceiver>();
+        private IList<IReceiver> pendingAdditions = new ConcurrentList<IReceiver>();
+
         private object Interlock = new object();
         /**
             * Registers an object to receive messsages from this transmitter. 
@@ -148,7 +151,6 @@ namespace Emesary
                             System.Threading.Interlocked.Decrement(ref inProgressCount);
                             return ReceiptStatus.OK;
                     }
-
                 }
             }
             catch

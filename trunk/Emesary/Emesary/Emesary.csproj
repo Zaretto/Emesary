@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConcurrentList.cs" />
     <Compile Include="IBridgableNotification.cs" />
     <Compile Include="GlobalQueue.cs" />
     <Compile Include="GlobalTransmitter.cs" />
