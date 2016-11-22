@@ -60,7 +60,7 @@ namespace Emesary
                 MessageQueueTransaction currentTransaction = null;// new MessageQueueTransaction();
                 //MessageQueueTransaction currentTransaction = null;
                 bridge.Active = true; 
-                
+                    
                 do
                 {
                     try
