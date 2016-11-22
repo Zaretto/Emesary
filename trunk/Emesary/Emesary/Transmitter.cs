@@ -50,12 +50,15 @@ namespace Emesary
             */
         public virtual void Register(IReceiver R)
         {
-            if (V.IndexOf(R) < 0)
+            lock (Interlock)
             {
-                if (inProgressCount <= 0)
-                    V.Insert(0, R);
-                else
-                    pendingAdditions.Add(R);
+                if (V.IndexOf(R) < 0)
+                {
+                    if (inProgressCount <= 0)
+                        V.Insert(0, R);
+                    else
+                        pendingAdditions.Add(R);
+                }
             }
         }
 
@@ -65,10 +68,13 @@ namespace Emesary
             */
         public virtual void DeRegister(IReceiver R)
         {
-            if (inProgressCount <= 0)
-                V.Remove(R);
-            else
-                pendingRemovals.Add(R);
+            lock (Interlock)
+            {
+                if (inProgressCount <= 0)
+                    V.Remove(R);
+                else
+                    pendingRemovals.Add(R);
+            }
         }
 
         /*
@@ -85,9 +91,9 @@ namespace Emesary
             */
         public virtual ReceiptStatus NotifyAll(INotification M)
         {
-            if (inProgressCount <= 0 && pendingRemovals.Count > 0)
+            lock (Interlock)
             {
-                lock (Interlock)
+                if (inProgressCount <= 0 && pendingRemovals.Count > 0)
                 {
                     foreach (var r in pendingRemovals)
                     {
@@ -96,9 +102,9 @@ namespace Emesary
                     pendingRemovals.Clear();
                 }
             }
-            if (inProgressCount <= 0 && pendingAdditions.Count > 0)
+            lock (Interlock)
             {
-                lock (Interlock)
+                if (inProgressCount <= 0 && pendingAdditions.Count > 0)
                 {
                     foreach (var r in pendingAdditions)
                     {
@@ -121,8 +127,11 @@ namespace Emesary
                 {
                     //
                     // do not notify any objects pending removal.
-                    if (pendingRemovals.Contains(R))
-                        break;
+                    lock (Interlock)
+                    {
+                        if (pendingRemovals.Contains(R))
+                            break;
+                    }
 
                     ReceiptStatus rstat = R.Receive(M);
                     switch (rstat)
