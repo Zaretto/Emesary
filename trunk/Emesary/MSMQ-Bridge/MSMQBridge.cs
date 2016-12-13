@@ -178,7 +178,8 @@ namespace Emesary
             try
             {
                 INotification receivedMessage = (INotification)msg.Body;
-                OnwardsTransmitter.NotifyAll(receivedMessage);
+                if (receivedMessage != null)
+                    OnwardsTransmitter.NotifyAll(receivedMessage);
             }
             catch (InvalidOperationException ex)
             {
