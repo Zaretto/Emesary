@@ -123,7 +123,18 @@ namespace Emesary
 
             try
             {
-                foreach (IReceiver R in V)
+                /*
+                 * To reduce concurrency issues firstly we will build a list of all of the current recipients to iterate.
+                 * The pending removals and pending additions may not be required - as part of the reason for these separate lists
+                 * was also to reduce concurrency issues - however it does work quite well as it is, with possibly reduced performance due to the locks
+                 */
+                var items = new List<IReceiver>();
+                lock(Interlock)
+                {
+                    foreach (var R in V)
+                        items.Add(R);
+                }
+                foreach (IReceiver R in items)
                 {
                     //
                     // do not notify any objects pending removal.
