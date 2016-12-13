@@ -14,7 +14,7 @@ namespace Tests
         public void MultiThreadTransmitterTest()
         {
             var names = ("1,2,3,4,5,6,a,b,c,d,e,f,g,h,i,j,k,l,1,2,3,4,5,6,a,b,c,d,e,f,g,h,i,j,k,l,1,2,3,4,5,6,a,b,c,d,e,f,g,h,i,j,k,l,").Split(',');
-            const int  MaxIterations = 999;
+            const int  MaxIterations = 9999;
             const int MaxSleep = 2; //ms
             int nthread = 0;
             Emesary.Transmitter target = new Emesary.Transmitter();
@@ -41,6 +41,7 @@ namespace Tests
             if (message.Value == this)
             {
                 System.Threading.Interlocked.Increment(ref receiveCount);
+                Emesary.GlobalTransmitter.NotifyAll(new Notification(message));
                 return ReceiptStatus.OK;
             }
             return ReceiptStatus.NotProcessed;

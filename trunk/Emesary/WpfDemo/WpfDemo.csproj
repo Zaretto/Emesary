@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Emesary, Version=2.2.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Emesary.2.2.5.1\lib\net40\Emesary.dll</HintPath>
+      <HintPath>..\packages\Emesary.2.2.6.2\lib\net40\Emesary.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
