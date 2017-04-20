@@ -23,8 +23,10 @@
  *---------------------------------------------------------------------------*/
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using System.Linq;
 
 namespace Emesary
 {
@@ -36,11 +38,8 @@ namespace Emesary
      */
     public class Transmitter : ITransmitter
     {
-        private IList<IReceiver> V = new ConcurrentList<IReceiver>();
-        private IList<IReceiver> pendingRemovals = new ConcurrentList<IReceiver>();
-        private IList<IReceiver> pendingAdditions = new ConcurrentList<IReceiver>();
-
-        private object Interlock = new object();
+        private ConcurrentDictionary<IReceiver, int> V = new ConcurrentDictionary<IReceiver, int>();
+        private int CurrentRecipientIndex = 0;
         /**
             * Registers an object to receive messsages from this transmitter. 
             * This object is added to the top of the list of objects to be notified. This is deliberate as 
@@ -50,31 +49,16 @@ namespace Emesary
             */
         public virtual void Register(IReceiver R)
         {
-            lock (Interlock)
-            {
-                if (V.IndexOf(R) < 0)
-                {
-                    if (inProgressCount <= 0)
-                        V.Insert(0, R);
-                    else
-                        pendingAdditions.Add(R);
-                }
-            }
+            if (!V.Keys.Any(xx => xx == R))
+                V[R] = Interlocked.Increment(ref CurrentRecipientIndex);
         }
-
-        int inProgressCount = 0;
         /*
             *  Removes an object from receving message from this transmitter
             */
         public virtual void DeRegister(IReceiver R)
         {
-            lock (Interlock)
-            {
-                if (inProgressCount <= 0)
-                    V.Remove(R);
-                else
-                    pendingRemovals.Add(R);
-            }
+            int out_idx;
+            V.TryRemove(R, out out_idx);
         }
 
         /*
@@ -91,95 +75,47 @@ namespace Emesary
             */
         public virtual ReceiptStatus NotifyAll(INotification M)
         {
-            lock (Interlock)
-            {
-                if (inProgressCount <= 0 && pendingRemovals.Count > 0)
-                {
-                    foreach (var r in pendingRemovals)
-                    {
-                        V.Remove(r);
-                    }
-                    pendingRemovals.Clear();
-                }
-            }
-            lock (Interlock)
-            {
-                if (inProgressCount <= 0 && pendingAdditions.Count > 0)
-                {
-                    foreach (var r in pendingAdditions)
-                    {
-                        if (V.IndexOf(r) < 0)
-                            V.Insert(0, r);
-                    }
-                    pendingAdditions.Clear();
-                }
-            }
-
-            //
-            // defer removals whilst processing notifications.
-            System.Threading.Interlocked.Increment(ref inProgressCount);
-
             ReceiptStatus return_status = ReceiptStatus.NotProcessed;
 
             try
             {
-                /*
-                 * To reduce concurrency issues firstly we will build a list of all of the current recipients to iterate.
-                 * The pending removals and pending additions may not be required - as part of the reason for these separate lists
-                 * was also to reduce concurrency issues - however it does work quite well as it is, with possibly reduced performance due to the locks
-                 */
-                var items = new List<IReceiver>();
-                lock(Interlock)
+                foreach (IReceiver R in V.OrderByDescending(xx => xx.Value).Select(xx => xx.Key).ToList())
                 {
-                    foreach (var R in V)
-                        items.Add(R);
-                }
-                foreach (IReceiver R in items)
-                {
-                    //
-                    // do not notify any objects pending removal.
-                    lock (Interlock)
+                    if (R != null)
                     {
-                        if (pendingRemovals.Contains(R))
-                            break;
-                    }
+                        ReceiptStatus rstat = R.Receive(M);
+                        switch (rstat)
+                        {
+                            case ReceiptStatus.Fail:
+                                return_status = ReceiptStatus.Fail;
+                                break;
+                            case ReceiptStatus.Pending:
+                                return_status = ReceiptStatus.Pending;
+                                break;
+                            case ReceiptStatus.PendingFinished:
+                                return rstat;
 
-                    ReceiptStatus rstat = R.Receive(M);
-                    switch (rstat)
-                    {
-                        case ReceiptStatus.Fail:
-                            return_status = ReceiptStatus.Fail;
-                            break;
-                        case ReceiptStatus.Pending:
-                            return_status = ReceiptStatus.Pending;
-                            break;
-                        case ReceiptStatus.PendingFinished:
-                            return rstat;
+                            case ReceiptStatus.NotProcessed:
+                                break;
+                            case ReceiptStatus.OK:
+                                if (return_status == ReceiptStatus.NotProcessed)
+                                    return_status = rstat;
+                                break;
 
-                        case ReceiptStatus.NotProcessed:
-                            break;
-                        case ReceiptStatus.OK:
-                            if (return_status == ReceiptStatus.NotProcessed)
-                                return_status = rstat;
-                            break;
+                            case ReceiptStatus.Abort:
+                                return ReceiptStatus.Abort;
 
-                        case ReceiptStatus.Abort:
-                            System.Threading.Interlocked.Decrement(ref inProgressCount);
-                            return ReceiptStatus.Abort;
-
-                        case ReceiptStatus.Finished:
-                            System.Threading.Interlocked.Decrement(ref inProgressCount);
-                            return ReceiptStatus.OK;
+                            case ReceiptStatus.Finished:
+                                return ReceiptStatus.OK;
+                        }
                     }
                 }
             }
             catch
             {
-                System.Threading.Interlocked.Decrement(ref inProgressCount);
                 throw;
                 // return_status = ReceiptStatus.Abort;
             }
-            System.Threading.Interlocked.Decrement(ref inProgressCount);
             return return_status;
         }
 
