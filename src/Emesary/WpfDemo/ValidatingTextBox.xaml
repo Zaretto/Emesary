@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="WpfDemo.ValidatingTextBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:my="clr-namespace:WpfDemo"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <DockPanel HorizontalAlignment="Stretch" Width="Auto">
+        <Label DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="8,8,0,0" 
+                       Width="Auto" Height="27"  Content="{Binding Prompt}" 
+                       FontSize="16" Name="promptTextBlock" />
+        <TextBox DockPanel.Dock="Left" HorizontalAlignment="Stretch" VerticalAlignment="Center" 
+                     TextWrapping="NoWrap" 
+                     Margin="8,8,5,0" 
+                     Name="NameField" MinWidth="200" Width="Auto" Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=my:ValidatingTextBox, AncestorLevel=1}, Path=Text}" />
+        <Image DockPanel.Dock="Right" ToolTip="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=my:ValidatingTextBox, AncestorLevel=1}, Path=Error}" 
+                   HorizontalAlignment="Right" Name="duplicatedName" Stretch="Fill" 
+                   Visibility="Hidden" VerticalAlignment="Center" 
+                   Margin="0,6,0,0"
+                   Width="33" Height="26" Source="/WpfDemo;component/Images/blue_warning.png" />
+        <TextBlock Name="ValidationMessage"/>
+    </DockPanel>
+</UserControl>
