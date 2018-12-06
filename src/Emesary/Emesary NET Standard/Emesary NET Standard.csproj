@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Emesary</AssemblyName>
+    <RootNamespace>Emesary</RootNamespace>
+    <Version>2.4.0</Version>
+    <Authors>Richard Harrison</Authors>
+    <Company>Zaretto</Company>
+    <Description>Efficient class based interobject communcation via notifications following a publish / subscribe model.</Description>
+    <Copyright>2017 Richard Harrison</Copyright>
+    <PackageLicenseUrl>https://emesary.codeplex.com/license</PackageLicenseUrl>
+    <PackageProjectUrl>https://emesary.codeplex.com/</PackageProjectUrl>
+    <RepositoryUrl>https://emesary.svn.codeplex.com/svn</RepositoryUrl>
+    <RepositoryType>SVN</RepositoryType>
+    <PackageTags>Notifications Events InterObjectCommunication MessageBus</PackageTags>
+    <PackageReleaseNotes>2.4.0 Added support for .NET Standard 2.0</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>
