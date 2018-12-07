@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,22 +11,35 @@ namespace Emesary
         public NotificationList(string queueId)
         {
             QueueID = queueId;
-            items = new List<INotification>();
+            items = new ConcurrentQueue<INotification>();
         }
         public string Id { get; private set; }
 
         public string QueueID { get; set; }
 
-        public List<INotification> items { get; private set; }
+        public int Count
+        {
+            get
+            {
+                if (items != null)
+                    return items.Count;
+                return 0;
+            }
+        }
+
+        ConcurrentQueue<INotification> items { get; set; }
 
         internal void Add(INotification M)
         {
-            items.Add(M);
+            items.Enqueue(M);
         }
 
-        internal void Remove(INotification M)
+        internal INotification Next()
         {
-            items.Remove(M);
+            INotification M;
+            if (items.TryDequeue(out M))
+                return M;
+            return null;
         }
     }
 

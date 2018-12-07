@@ -83,19 +83,21 @@ namespace Emesary
 
         public void ProcessPending()
         {
-            if (pendingList.items.Count <= 0)
+            if (pendingList.Count <= 0)
                 return;
 
             // Iterate through all notifications that are ready to be processed.
             //            foreach (var notification in pendingList.items.Where(n => DateTime.UtcNow >= n.whenNextReadyToSend))
-            foreach (var notification in pendingList.items.ToList())
+            var incompleteList = new List<INotification>();
+            INotification notification = pendingList.Next();
+            while (notification != null)
             {
                 if (notification is IQueueNotification)
                 {
                     var qnotification = notification as IQueueNotification;
 //                    if (DateTime.UtcNow <= qnotification.WhenNextReadyToSend)
-                    if (!qnotification.IsReadyToSend)
-                        continue;
+                    if (qnotification.IsReadyToSend)
+                    {
 
                     //bool process_failed = false;
                     //bool processed_ok = false;
@@ -129,9 +131,9 @@ namespace Emesary
                         if (qnotification.Completed != null)
                             qnotification.Completed(qnotification, notify_result);
                         
-                        if (qnotification.IsComplete || qnotification.IsTimedOut)
+                            if (!(qnotification.IsComplete || qnotification.IsTimedOut))
                         {
-                            pendingList.Remove(notification);
+                                incompleteList.Add(notification);
                         }
                         if (notify_result == ReceiptStatus.Finished || notify_result == ReceiptStatus.Abort)
                             break;
@@ -146,9 +148,14 @@ namespace Emesary
                     System.Diagnostics.Debug.WriteLine("QueuedTransmitter; Notify non queued message {0}", notification.ToString());
                     ReceiptStatus notify_result = base.NotifyAll(notification);
 
-                    pendingList.Remove(notification);
+                    }
+                    notification = pendingList.Next();
                 }
             }
+            //
+            // now add pending notifications back into the list.
+            foreach (var incompleteNotification in incompleteList)
+                pendingList.Add(incompleteNotification);
         }
 
         public ReceiptStatus Receive(INotification message)
@@ -170,7 +177,7 @@ namespace Emesary
         public int PendingSleepMs { get; set; }
         public void WaitForMessage()
         {
-            if (pendingList.items.Count > 0)
+            if (pendingList.Count > 0)
             {
                 if (nextExec < DateTime.Now)
                     System.Threading.Thread.Sleep(PendingSleepMs); // sleep for between queue execution

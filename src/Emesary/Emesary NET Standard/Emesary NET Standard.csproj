@@ -4,17 +4,21 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Emesary</AssemblyName>
     <RootNamespace>Emesary</RootNamespace>
-    <Version>2.4.0</Version>
+    <Version>2.4.1.1</Version>
     <Authors>Richard Harrison</Authors>
     <Company>Zaretto</Company>
     <Description>Efficient class based interobject communcation via notifications following a publish / subscribe model.</Description>
-    <Copyright>2017 Richard Harrison</Copyright>
-    <PackageLicenseUrl>https://emesary.codeplex.com/license</PackageLicenseUrl>
-    <PackageProjectUrl>https://emesary.codeplex.com/</PackageProjectUrl>
-    <RepositoryUrl>https://emesary.svn.codeplex.com/svn</RepositoryUrl>
-    <RepositoryType>SVN</RepositoryType>
+    <Copyright>2018 Richard Harrison</Copyright>
+    <PackageLicenseUrl>https://github.com/Zaretto/Emesary/Licence</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/Zaretto/Emesary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Zaretto/Emesary</RepositoryUrl>
+    <RepositoryType>.</RepositoryType>
     <PackageTags>Notifications Events InterObjectCommunication MessageBus</PackageTags>
-    <PackageReleaseNotes>2.4.0 Added support for .NET Standard 2.0</PackageReleaseNotes>
+    <PackageReleaseNotes>2.4.1 Change queued notification list to use ConcurrentQueue rather than List to fix threading issues.
+2.4.0 Added support for .NET Standard 2.0</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>2.4.1.1</AssemblyVersion>
+    <FileVersion>2.4.1.1</FileVersion>
   </PropertyGroup>
 
 </Project>

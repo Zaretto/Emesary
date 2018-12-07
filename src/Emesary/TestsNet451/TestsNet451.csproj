@@ -38,11 +38,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Emesary, Version=2.2.6.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Emesary.2.2.6.4\lib\net451\Emesary.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\Emesary.2.4.1\lib\net451\Emesary.dll</HintPath>
     </Reference>
-    <Reference Include="EmesaryMSMQBridge">
-      <HintPath>..\packages\EmesaryMSMQBridge.2.2.6.5\lib\net451\EmesaryMSMQBridge.dll</HintPath>
+    <Reference Include="EmesaryMSMQBridge, Version=2.2.6.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\EmesaryMSMQBridge.2.2.6.3\lib\net451\EmesaryMSMQBridge.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
