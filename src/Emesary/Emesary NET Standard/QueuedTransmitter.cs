@@ -89,68 +89,68 @@ namespace Emesary
             // Iterate through all notifications that are ready to be processed.
             //            foreach (var notification in pendingList.items.Where(n => DateTime.UtcNow >= n.whenNextReadyToSend))
             var incompleteList = new List<INotification>();
+
             INotification notification = pendingList.Next();
             while (notification != null)
             {
                 if (notification is IQueueNotification)
                 {
                     var qnotification = notification as IQueueNotification;
-//                    if (DateTime.UtcNow <= qnotification.WhenNextReadyToSend)
+                    //                    if (DateTime.UtcNow <= qnotification.WhenNextReadyToSend)
                     if (qnotification.IsReadyToSend)
                     {
 
-                    //bool process_failed = false;
-                    //bool processed_ok = false;
+                        //bool process_failed = false;
+                        //bool processed_ok = false;
 
-                    //
-                    // only notify when the notification ready to be sent. This may be used in addition to the whenNextReadyToSend
-                    // to priver fine grained control over retries.
-                    if (qnotification.IsReadyToSend)
-                    {
-                        System.Diagnostics.Debug.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - " + notification.ToString());
-
-                        ReceiptStatus notify_result = base.NotifyAll(notification);
-
-                        //switch (notify_result)
-                        //{
-                        //    case ReceiptStatus.Abort:
-                        //    case ReceiptStatus.Fail:
-                        //        process_failed = true;
-                        //        break;
-
-                        //    case ReceiptStatus.OK:
-                        //    case ReceiptStatus.Finished:
-                        //        processed_ok = true;
-                        //        break;
-
-                        //    case ReceiptStatus.Pending:
-                        //    case ReceiptStatus.NotProcessed:
-                        //    default:
-                        //        break;
-                        //}
-                        if (qnotification.Completed != null)
-                            qnotification.Completed(qnotification, notify_result);
-                        
-                            if (!(qnotification.IsComplete || qnotification.IsTimedOut))
+                        //
+                        // only notify when the notification ready to be sent. This may be used in addition to the whenNextReadyToSend
+                        // to priver fine grained control over retries.
+                        if (qnotification.IsReadyToSend)
                         {
+                            System.Diagnostics.Debug.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - " + notification.ToString());
+
+                            ReceiptStatus notify_result = base.NotifyAll(notification);
+
+                            //switch (notify_result)
+                            //{
+                            //    case ReceiptStatus.Abort:
+                            //    case ReceiptStatus.Fail:
+                            //        process_failed = true;
+                            //        break;
+
+                            //    case ReceiptStatus.OK:
+                            //    case ReceiptStatus.Finished:
+                            //        processed_ok = true;
+                            //        break;
+
+                            //    case ReceiptStatus.Pending:
+                            //    case ReceiptStatus.NotProcessed:
+                            //    default:
+                            //        break;
+                            //}
+                            if (qnotification.Completed != null)
+                                qnotification.Completed(qnotification, notify_result);
+
+                            if (!(qnotification.IsComplete || qnotification.IsTimedOut))
+                            {
                                 incompleteList.Add(notification);
+                            }
+                            if (notify_result == ReceiptStatus.Finished || notify_result == ReceiptStatus.Abort)
+                                break;
                         }
-                        if (notify_result == ReceiptStatus.Finished || notify_result == ReceiptStatus.Abort)
-                            break;
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - not ready: " + notification.ToString());
+                        }
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - not ready: " + notification.ToString());
+                        System.Diagnostics.Debug.WriteLine("QueuedTransmitter; Notify non queued message {0}", notification.ToString());
+                        ReceiptStatus notify_result = base.NotifyAll(notification);
                     }
                 }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("QueuedTransmitter; Notify non queued message {0}", notification.ToString());
-                    ReceiptStatus notify_result = base.NotifyAll(notification);
-
-                    }
-                    notification = pendingList.Next();
-                }
+                notification = pendingList.Next();
             }
             //
             // now add pending notifications back into the list.

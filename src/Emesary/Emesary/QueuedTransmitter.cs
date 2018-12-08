@@ -149,8 +149,8 @@ namespace Emesary
                         System.Diagnostics.Debug.WriteLine("QueuedTransmitter; Notify non queued message {0}", notification.ToString());
                         ReceiptStatus notify_result = base.NotifyAll(notification);
                     }
-                    notification = pendingList.Next();
                 }
+                notification = pendingList.Next();
             }
             //
             // now add pending notifications back into the list.
