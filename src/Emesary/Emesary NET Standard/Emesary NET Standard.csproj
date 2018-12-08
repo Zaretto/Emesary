@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Emesary</AssemblyName>
     <RootNamespace>Emesary</RootNamespace>
-    <Version>2.4.3</Version>
+    <Version>2.4.4</Version>
     <Authors>Richard Harrison</Authors>
     <Company>Zaretto</Company>
     <Description>Efficient class based interobject communcation via notifications following a publish / subscribe model.</Description>
@@ -17,8 +17,8 @@
     <PackageReleaseNotes>2.4.1 Change queued notification list to use ConcurrentQueue rather than List to fix threading issues.
 2.4.0 Added support for .NET Standard 2.0</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>2.4.3.0</AssemblyVersion>
-    <FileVersion>2.4.3.0</FileVersion>
+    <AssemblyVersion>2.4.4.0</AssemblyVersion>
+    <FileVersion>2.4.4.0</FileVersion>
   </PropertyGroup>
 
 </Project>

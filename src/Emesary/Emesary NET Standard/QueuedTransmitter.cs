@@ -143,12 +143,13 @@ namespace Emesary
                         {
                             System.Diagnostics.Debug.WriteLine("Process pending " + DateTime.Now.ToShortTimeString() + " - not ready: " + notification.ToString());
                         }
+
                     }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine("QueuedTransmitter; Notify non queued message {0}", notification.ToString());
-                        ReceiptStatus notify_result = base.NotifyAll(notification);
-                    }
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("QueuedTransmitter; Notify non queued message {0}", notification.ToString());
+                    ReceiptStatus notify_result = base.NotifyAll(notification);
                 }
                 notification = pendingList.Next();
             }
