@@ -18,11 +18,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ManagedObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Emesary.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ManagedObject.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
