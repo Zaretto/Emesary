@@ -81,8 +81,8 @@ namespace TestEmesaryC
 		printf("finish thread %s\n", temp);
 		return 0;
 	}
-	[TestClass]
-	public ref class UnitTest1
+
+	public ref class C_ThreadingTest
 	{
 	public: 
 		[TestMethod]

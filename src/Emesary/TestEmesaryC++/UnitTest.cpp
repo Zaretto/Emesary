@@ -81,7 +81,7 @@ namespace TestEmesaryC
 		#pragma endregion 
 
 		[TestMethod]
-		void Emesary_C_BasicTest()
+		void Emesary_C_BasicTest1()
 		{
 			TestRecipient r;
 			Emesary::Transmitter testTransmitter;
@@ -93,5 +93,11 @@ namespace TestEmesaryC
 			testTransmitter.DeRegister(r);
 			Assert::AreEqual(0, testTransmitter.Count());
 		};
+
+		
+			[TestMethod()]
+			void Emesary_MultiThreadTransmitterTest()
+			{
+			}
 	};
 }
