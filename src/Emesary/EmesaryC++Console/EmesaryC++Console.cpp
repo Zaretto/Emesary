@@ -2,9 +2,8 @@
 //
 
 #include "stdafx.h"
-#include "Emesary.h"
+#include "Emesary.hxx"
 
-#include "stdafx.h"
 #include <Windows.h>
 #include <process.h>
 #include <atomic>
@@ -17,31 +16,30 @@
 
 	class TestThreadNotification : public Emesary::INotification
 	{
-	protected:
-		void *value;
 	public:
-		TestThreadNotification(void *v) : value(v) {}
+		TestThreadNotification(const char *v) : value(v) {}
 
-		virtual void Value(void *v) { value = v; }
-		virtual void* Value() { return value; }
+		virtual const char * GetType() { return value; }
 		virtual int get_id(void) const
 		{
 			return 2211;
 		}
+	protected:
+		const char* value;
 	};
 
 	class TestThreadRecipient : public Emesary::IReceiver
 	{
 	public:
-		TestThreadRecipient() : receiveCount(0)
+		TestThreadRecipient(std::string type) : receiveCount(0)
 		{
-
+			thisType = type;
 		}
-
+		std::string thisType;
 		std::atomic<int> receiveCount;
 		virtual Emesary::ReceiptStatus Receive(Emesary::INotification &n)
 		{
-			if (n.Value() == this)
+			if (thisType  == n.GetType())
 			{
                 TestThreadNotification *tn = dynamic_cast<TestThreadNotification *>(&n);
                 if (tn)
@@ -51,13 +49,13 @@
 				receiveCount++;
 				TestThreadNotification onwardNotification("AL");
 				GlobalTransmitter.NotifyAll(onwardNotification);
-				return Emesary::ReceiptStatusOK;
+				return Emesary::ReceiptStatus::OK;
 			}
 			//else if (message.Value == 11)
 			//{
 
 			//}
-			return Emesary::ReceiptStatusOK;
+			return Emesary::ReceiptStatus::OK;
 		}
 	};
 
@@ -69,11 +67,11 @@
 
 		//System.Threading.Interlocked.Increment(ref nthread);
 		//var rng = new Random();
-		TestThreadRecipient r;
+		TestThreadRecipient *r = new TestThreadRecipient("TestThread2");
 		char temp[100];
 		sprintf(temp, "Notif %d", threadId);
 		printf("starting thread %s\n", temp);
-		TestThreadNotification tn(&r);
+		TestThreadNotification tn(r->thisType.c_str());
 		for (int i = 0; i < MaxIterations; i++)
 		{
 			GlobalTransmitter.Register(r);
@@ -82,7 +80,7 @@
 			//System.Threading.Thread.Sleep(rng.Next(MaxSleep));
 			noperations++;
 		}
-		printf("%s invocations %d\n", temp, (int)r.receiveCount);
+		printf("%s invocations %d\n", temp, (int)r->receiveCount);
 		printf("finish thread %s\n", temp);
 		return 0;
 	}
@@ -139,14 +137,14 @@
 
 int main()
 {
-	TestThreadRecipient r;
-	TestThreadNotification tn(&r);
+	TestThreadRecipient* r = new TestThreadRecipient("TestThread2");
+	TestThreadNotification tn(r->thisType.c_str());
 	GlobalTransmitter.Register(r);
 	for (int i = 0; i < MaxIterations*MaxIterations; i++)
 	{
 		GlobalTransmitter.NotifyAll(tn);
 		//System.Threading.Thread.Sleep(rng.Next(MaxSleep));
-		noperations++;
+ 		noperations++;
 	}
 	GlobalTransmitter.DeRegister(r);
 	printf("invocations %d\n", GlobalTransmitter.SentMessageCount());

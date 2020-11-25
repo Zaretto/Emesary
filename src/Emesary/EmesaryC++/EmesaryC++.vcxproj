@@ -131,8 +131,17 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Emesary.h" />
-    <ClInclude Include="ManagedObject.h" />
+    <ClInclude Include="Emesary.hxx" />
+    <ClInclude Include="INotification.hxx" />
+    <ClInclude Include="IReceiver.hxx" />
+    <ClInclude Include="ITransmitter.hxx" />
+    <ClInclude Include="ObjectPtr.hxx" />
+    <ClInclude Include="notifications.hxx" />
+    <ClInclude Include="ObjectRef.hxx" />
+    <ClInclude Include="ReceiptStatus.hxx" />
+    <ClInclude Include="Singleton.hxx" />
+    <ClInclude Include="TimeStamp.h" />
+    <ClInclude Include="Transmitter.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Emesary.cpp" />

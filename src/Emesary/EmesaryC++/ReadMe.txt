@@ -66,7 +66,7 @@ they mean.
                 }
                 receiveCount++;
             }
-            return Emesary::ReceiptStatusOK;
+            return Emesary::ReceiptStatus::OK;
         }
     };
 
