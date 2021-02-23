@@ -36,8 +36,8 @@ namespace Emesary
             if (qpc_init && s_use_qpc) {
                 LARGE_INTEGER now;
                 QueryPerformanceCounter(&now);
-                _sec = now.QuadPart / s_frequency.QuadPart;
-                _nsec = (1000000000LL * (now.QuadPart - _sec * s_frequency.QuadPart)) / s_frequency.QuadPart;
+                _sec = static_cast<long>(now.QuadPart / s_frequency.QuadPart);
+                _nsec = static_cast<long>((1000000000LL * (now.QuadPart - _sec * s_frequency.QuadPart)) / s_frequency.QuadPart);
             }
 			else { throw "Unable to stamp()"; }
             /*else {
@@ -161,7 +161,21 @@ namespace Emesary
         /**
         * elapsed time since the stamp was taken, in usec
         */
-        int elapsedUSec() const;
+        int elapsedUSec() const {
+            TimeStamp now;
+            now.stamp();
+
+            return static_cast<int>((now - *this).toUSecs());
+        }
+
+        /// output rate based on total number of operations expressed in millions / sec
+        void output_rate_per_Msec(const unsigned int& total_operations)
+        {
+            auto rate_perUs = elapsedUSec() / static_cast<double>(total_operations);
+            auto per_second = (static_cast<unsigned>(round(1000000 / rate_perUs))) / 1000000.0;
+            std::cout << "elapsed " << elapsedUSec() / 1000000.0 << ", average " << rate_perUs << " uS per operation, rate " << std::fixed << per_second << "/M/sec" << std::endl;
+        }
+
     private:
         nsec_type _nsec;
         sec_type _sec;
@@ -243,7 +257,7 @@ namespace Emesary
         TimeStamp pos = c;
         if (c.getSeconds() < 0) {
             stream << stream.widen('-');
-            pos = -c;
+            pos = TimeStamp() - c;
         }
         stream << pos.getSeconds() << stream.widen('.');
         stream << std::setw(9) << std::setfill('0') << pos.getNanoSeconds();
